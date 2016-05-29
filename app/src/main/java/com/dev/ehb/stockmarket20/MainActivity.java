@@ -1,5 +1,6 @@
 package com.dev.ehb.stockmarket20;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     String[] stockList;
     ArrayAdapter a;
     EditText et1;
+    String stock1 = "";
+    DaltonStock stocka;
+    TextView price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,54 +31,62 @@ public class MainActivity extends AppCompatActivity {
         setUp();
     }
     public void searchStock( String str ) {
-        String stock1 = str;
+        stock1 = str;
         stock1 = stock1.toUpperCase();
         System.out.println("Waiting...");
+        Toast.makeText(getApplicationContext(), "Waiting...", 8).show();
         try{
             TimeUnit.SECONDS.sleep(9);
 
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
-        DaltonStock stocka = new DaltonStock(stock1);
-        String str2 = "Last price: " + stocka.lastprice;
-        Toast.makeText(getApplicationContext(), str2, Toast.LENGTH_LONG).show();
+        //DaltonStock stocka = new DaltonStock(stock1);
+        new Background().execute();
+        //String str2 = "Last price: " + stocka.lastprice;
+        //Toast.makeText(getApplicationContext(), str2, Toast.LENGTH_LONG).show();
         //Toast.makeText(getApplicationContext(), stocka.change, Toast.LENGTH_LONG).show();
     }
-    public void setUp (){
-        stockList = new String[]{"stock1", "stock2", "stock3", "stock4", "stock5"};
-        //ListView lv1 = (ListView) findViewById(R.id.lView1);
-        a = new ArrayAdapter<String>(this, R.layout.list_item, R.id.stock_name, stockList);
-        //lv1. setAdapter(a);
-        et1 = (EditText) this.findViewById(R.id.search_stock);
 
-        et1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchStock( et1.getText().toString() );
-                    return true;
-                }
-                return false;
+    class Background extends AsyncTask <Void, String, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            stocka = new DaltonStock(stock1);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            String str2 = "Last price: " + stocka.lastprice;
+            price.setText(str2);
+            Toast.makeText(getApplicationContext(), str2, Toast.LENGTH_LONG).show();
+        }
+        @Override
+        protected void onPreExecute(){
+            price.setText("searching...");
+        }
+
+    }
+
+
+        public void setUp (){
+            price = (TextView) findViewById(R.id.tv1);
+            stockList = new String[]{"stock1", "stock2", "stock3", "stock4", "stock5"};
+            //ListView lv1 = (ListView) findViewById(R.id.lView1);
+            a = new ArrayAdapter<String>(this, R.layout.list_item, R.id.stock_name, stockList);
+            //lv1. setAdapter(a);
+            et1 = (EditText) this.findViewById(R.id.search_stock);
+
+            et1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        searchStock( et1.getText().toString() );
+                        return true;
+                    }
+                    return false;
             }
         });
-
-        /* et1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                MainActivity.this.a.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });*/
     }
 
 }
