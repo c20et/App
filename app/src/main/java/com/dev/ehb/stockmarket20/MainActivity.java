@@ -1,11 +1,13 @@
 package com.dev.ehb.stockmarket20;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     String stock1 = "";
     DaltonStock stocka;
     TextView price;
+    String str2;
+    double tempPrice;
+    int numBought;
+    EditText et2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         stock1 = str;
         stock1 = stock1.toUpperCase();
         System.out.println("Waiting...");
-        Toast.makeText(getApplicationContext(), "Waiting...", 8).show();
+        price.setText("searching...");
         try{
             TimeUnit.SECONDS.sleep(9);
 
@@ -57,9 +63,10 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String result) {
-            String str2 = "Last price: " + stocka.lastprice;
+            str2 = "" + stocka.lastprice;
+            tempPrice = stocka.lastprice;
             price.setText(str2);
-            Toast.makeText(getApplicationContext(), str2, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), str2, Toast.LENGTH_LONG).show();
         }
         @Override
         protected void onPreExecute(){
@@ -67,9 +74,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    public void addToList(View v) {
+        numBought = Integer.parseInt(et2.getText().toString());
+        Activity0.money = Activity0.money - tempPrice;
+        String fsName = stock1;
+        String fsPrice = "current price: " +str2;
+        String fsNum = "number bought: " + et2.getText().toString();
+        String fsTotal = "value: " + (String.valueOf(numBought*tempPrice));
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("r1", fsName );
+        returnIntent.putExtra("r2", fsPrice );
+        returnIntent.putExtra("r3", fsNum );
+        returnIntent.putExtra("r4", fsTotal );
+        setResult(Activity0.RESULT_OK,returnIntent);
+        finish();
+    }
 
         public void setUp (){
+            et2 = (EditText) this.findViewById(R.id.num1);
             price = (TextView) findViewById(R.id.tv1);
             stockList = new String[]{"stock1", "stock2", "stock3", "stock4", "stock5"};
             //ListView lv1 = (ListView) findViewById(R.id.lView1);
