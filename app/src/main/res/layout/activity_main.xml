@@ -23,7 +23,7 @@
     <TextView
         android:textColor="#ffffff"
         android:id="@+id/tv1"
-        android:text="Searching..."
+        android:text="your financial seccurity is very importent to us"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/search_stock"

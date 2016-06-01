@@ -40,11 +40,12 @@ public class MainActivity extends AppCompatActivity {
         stock1 = str;
         stock1 = stock1.toUpperCase();
         System.out.println("Waiting...");
-        price.setText("searching...");
+        price.setText("please wait...");
         try{
             TimeUnit.SECONDS.sleep(9);
 
-        }catch(InterruptedException e) {
+        }
+        catch(InterruptedException e) {
             e.printStackTrace();
         }
         //DaltonStock stocka = new DaltonStock(stock1);
@@ -70,13 +71,14 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute(){
-            price.setText("searching...");
+            price.setText("please wait...");
         }
 
     }
     public void addToList(View v) {
         numBought = Integer.parseInt(et2.getText().toString());
-        Activity0.money = Activity0.money - tempPrice;
+        double temp = ((MyAppApplication)getApplicationContext()).getMoney();
+        ((MyAppApplication) this.getApplication()).setMoney(temp-(numBought*tempPrice));
         String fsName = stock1;
         String fsPrice = "current price: " +str2;
         String fsNum = "number bought: " + et2.getText().toString();
